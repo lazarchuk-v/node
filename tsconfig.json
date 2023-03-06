@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
-     "target": "ES2022",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+     "target": "ES2021",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
      "module": "CommonJS",                                /* Specify what module code is generated. */
      "moduleResolution": "node",                          /* Specify how TypeScript looks up a file from a given module specifier. */
      "rootDir": "./src",                                  /* Specify the root folder within your source files. */
@@ -11,6 +11,6 @@
      "removeComments": true,                           /* Disable emitting comments. */
      "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
      "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
-
+     "skipLibCheck": true
   }
 }
