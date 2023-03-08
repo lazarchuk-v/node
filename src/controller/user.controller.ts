@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 
 import { User } from "../models/User.model";
+import { userService } from "../services/user.service";
 import { ICommonResponse, IUser } from "../types/user.types";
 
 class UserController {
   public async getAll(req: Request, res: Response): Promise<Response<IUser[]>> {
     try {
-      const users = await User.find();
+      const users = await userService.getAll();
 
       return res.json(users);
     } catch (e) {
@@ -23,7 +24,7 @@ class UserController {
   ): Promise<Response<IUser>> {
     try {
       const { userId } = req.params;
-      const user = await User.findById(userId);
+      const user = await userService.getById(userId);
 
       return res.json(user);
     } catch (e) {

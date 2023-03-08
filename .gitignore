@@ -1,5 +1,6 @@
 /node_modules/
 /.env
+/.env.*
 /node-okten.iml
 /package-lock.json
 /.idea/

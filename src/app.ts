@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
+import { configs } from "./config/config";
 import { userRouter } from "./router/user.router";
 import { IError } from "./types/common.types";
 
@@ -21,8 +22,7 @@ app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-const PORT = 5000;
-app.listen(PORT, () => {
-  mongoose.connect("mongodb://127.0.0.1:27017/node-okten").then();
-  console.log(`Server has started on PORT ${PORT} -=*=- Running -=*=-`);
+app.listen(configs.PORT, () => {
+  mongoose.connect(configs.DB_URL).then();
+  console.log(`Server has started on PORT ${configs.PORT} -=*=- Running -=*=-`);
 });
