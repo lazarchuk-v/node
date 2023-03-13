@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { isObjectIdOrHexString } from "mongoose";
 
-import { ApiError } from "../errors/api.error";
-import { User } from "../model/User.model";
+import { ApiError } from "../errors";
+import { User } from "../model";
+import { IRequest } from "../types";
 import { UserValidator } from "../validator";
 
 class UserMiddleware {
@@ -27,7 +28,52 @@ class UserMiddleware {
     }
   }
 
-  public async isUserValidCreate(
+  public getDynamicallyAndThrow(
+    fieldName: string,
+    from = "body",
+    dbField = fieldName
+  ) {
+    return async (req: IRequest, res: Response, next: NextFunction) => {
+      try {
+        const fieldValue = req[from][fieldName];
+
+        const user = await User.findOne({ [dbField]: fieldValue });
+        if (user) {
+          throw new ApiError("Test error", 409);
+        }
+
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  public getDynamicallyOrThrow(
+    fieldName: string,
+    from = "body",
+    dbField = fieldName
+  ) {
+    return async (req: IRequest, res: Response, next: NextFunction) => {
+      try {
+        const fieldValue = req[from][fieldName];
+
+        const user = await User.findOne({ [dbField]: fieldValue });
+        if (!user) {
+          throw new ApiError(`User not found`, 404);
+        }
+
+        req.res.locals = user;
+
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  // ---VALIDATORS---
+  public async isValidCreate(
     req: Request,
     res: Response,
     next: NextFunction
@@ -46,7 +92,7 @@ class UserMiddleware {
     }
   }
 
-  public async isUserValidUpdate(
+  public async isValidUpdate(
     req: Request,
     res: Response,
     next: NextFunction
@@ -65,7 +111,7 @@ class UserMiddleware {
     }
   }
 
-  public async isUserValid(
+  public async isValid(
     req: Request,
     res: Response,
     next: NextFunction
@@ -74,6 +120,24 @@ class UserMiddleware {
       if (!isObjectIdOrHexString(req.params.userId)) {
         throw new ApiError("ID is not valid", 400);
       }
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async isValidLogin(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { error } = UserValidator.loginUser.validate(req.body);
+
+      if (error) {
+        throw new ApiError(error.message, 400);
+      }
+
       next();
     } catch (e) {
       next(e);

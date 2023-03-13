@@ -5,12 +5,11 @@ export enum EGenders {
 }
 
 export interface IUser {
-  mail: {
-    type: string;
-    email: string;
-    password: string;
-    gender: string;
-  };
+  _id?: string;
+  name: string;
+  email: string;
+  password: string;
+  gender: string;
 }
 
 export interface ICommonResponse<T> {
